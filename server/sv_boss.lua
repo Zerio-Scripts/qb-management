@@ -148,7 +148,7 @@ RegisterNetEvent('qb-bossmenu:server:GradeUpdate', function(data)
 	if Employee then
 		if Employee.Functions.SetJob(Player.PlayerData.job.name, data.grade) then
 
-			exports["zerio-multijobs"]:GetJobs(Player.PlayerData.citizenid, function(jobs)
+			exports["zerio-multijobs"]:GetJobs(Employee.PlayerData.citizenid, function(jobs)
 				local hasMultiJob = false
 
 				for i,v in pairs(jobs) do
@@ -159,9 +159,9 @@ RegisterNetEvent('qb-bossmenu:server:GradeUpdate', function(data)
 				end
 
 				if hasMultiJob then
-					exports["zerio-multijobs"]:UpdateJobRank(Player.PlayerData.citizenid, Player.PlayerData.job.name, data.grade)
+					exports["zerio-multijobs"]:UpdateJobRank(Employee.PlayerData.citizenid, Player.PlayerData.job.name, data.grade)
 				else
-					exports["zerio-multijobs"]:AddJob(Player.PlayerData.citizenid, Player.PlayerData.job.name)
+					exports["zerio-multijobs"]:AddJob(Employee.PlayerData.citizenid, Player.PlayerData.job.name)
 				end
 			end)
 
@@ -187,7 +187,7 @@ RegisterNetEvent('qb-bossmenu:server:FireEmployee', function(target)
 	if Employee then
 		if target ~= Player.PlayerData.citizenid then
 			if Employee.PlayerData.job.grade.level > Player.PlayerData.job.grade.level then TriggerClientEvent('QBCore:Notify', src, "You cannot fire this citizen!", "error") return end
-			exports["zerio-multijobs"]:RemoveJob(Player.PlayerData.citizenid, Player.PlayerData.job.name)
+			exports["zerio-multijobs"]:RemoveJob(Employee.PlayerData.citizenid, Player.PlayerData.job.name)
 			if Employee.Functions.SetJob("unemployed", '0') then
 				TriggerEvent("qb-log:server:CreateLog", "bossmenu", "Job Fire", "red", Player.PlayerData.charinfo.firstname .. " " .. Player.PlayerData.charinfo.lastname .. ' successfully fired ' .. Employee.PlayerData.charinfo.firstname .. " " .. Employee.PlayerData.charinfo.lastname .. " (" .. Player.PlayerData.job.name .. ")", false)
 				TriggerClientEvent('QBCore:Notify', src, "Employee fired!", "success")
@@ -232,7 +232,7 @@ RegisterNetEvent('qb-bossmenu:server:HireEmployee', function(recruit)
 	if not Player.PlayerData.job.isboss then ExploitBan(src, 'HireEmployee Exploiting') return end
 
 	if Target and Target.Functions.SetJob(Player.PlayerData.job.name, 0) then
-		exports["zerio-multijobs"]:AddJob(Player.PlayerData.citizenid, Player.PlayerData.job.name, 0)
+		exports["zerio-multijobs"]:AddJob(Employee.PlayerData.citizenid, Player.PlayerData.job.name, 0)
 		TriggerClientEvent('QBCore:Notify', src, "You hired " .. (Target.PlayerData.charinfo.firstname .. ' ' .. Target.PlayerData.charinfo.lastname) .. " come " .. Player.PlayerData.job.label .. "", "success")
 		TriggerClientEvent('QBCore:Notify', Target.PlayerData.source , "You were hired as " .. Player.PlayerData.job.label .. "", "success")
 		TriggerEvent('qb-log:server:CreateLog', 'bossmenu', 'Recruit', "lightgreen", (Player.PlayerData.charinfo.firstname .. ' ' .. Player.PlayerData.charinfo.lastname).. " successfully recruited " .. (Target.PlayerData.charinfo.firstname .. ' ' .. Target.PlayerData.charinfo.lastname) .. ' (' .. Player.PlayerData.job.name .. ')', false)
