@@ -147,7 +147,6 @@ RegisterNetEvent('qb-bossmenu:server:GradeUpdate', function(data)
 	
 	if Employee then
 		if Employee.Functions.SetJob(Player.PlayerData.job.name, data.grade) then
-
 			exports["zerio-multijobs"]:GetJobs(Employee.PlayerData.citizenid, function(jobs)
 				local hasMultiJob = false
 
@@ -164,6 +163,7 @@ RegisterNetEvent('qb-bossmenu:server:GradeUpdate', function(data)
 					exports["zerio-multijobs"]:AddJob(Employee.PlayerData.citizenid, Player.PlayerData.job.name)
 				end
 			end)
+			Employee.Functions.Save()
 
 			TriggerClientEvent('QBCore:Notify', src, "Sucessfulluy promoted!", "success")
 			TriggerClientEvent('QBCore:Notify', Employee.PlayerData.source, "You have been promoted to" ..data.gradename..".", "success")
@@ -195,11 +195,14 @@ RegisterNetEvent('qb-bossmenu:server:FireEmployee', function(target)
 			else
 				TriggerClientEvent('QBCore:Notify', src, "Error..", "error")
 			end
+			Employee.Functions.Save()
 		else
 			TriggerClientEvent('QBCore:Notify', src, "You can\'t fire yourself", "error")
 		end
 	else
 		local player = MySQL.query.await('SELECT * FROM players WHERE citizenid = ? LIMIT 1', { target })
+		exports["zerio-multijobs"]:RemoveJob(target, Player.PlayerData.job.name)
+
 		if player[1] ~= nil then
 			Employee = player[1]
 			Employee.job = json.decode(Employee.job)
@@ -236,6 +239,7 @@ RegisterNetEvent('qb-bossmenu:server:HireEmployee', function(recruit)
 		TriggerClientEvent('QBCore:Notify', src, "You hired " .. (Target.PlayerData.charinfo.firstname .. ' ' .. Target.PlayerData.charinfo.lastname) .. " come " .. Player.PlayerData.job.label .. "", "success")
 		TriggerClientEvent('QBCore:Notify', Target.PlayerData.source , "You were hired as " .. Player.PlayerData.job.label .. "", "success")
 		TriggerEvent('qb-log:server:CreateLog', 'bossmenu', 'Recruit', "lightgreen", (Player.PlayerData.charinfo.firstname .. ' ' .. Player.PlayerData.charinfo.lastname).. " successfully recruited " .. (Target.PlayerData.charinfo.firstname .. ' ' .. Target.PlayerData.charinfo.lastname) .. ' (' .. Player.PlayerData.job.name .. ')', false)
+		Employee.Functions.Save()
 	end
 	TriggerClientEvent('qb-bossmenu:client:OpenMenu', src)
 end)
