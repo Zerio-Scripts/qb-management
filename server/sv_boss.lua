@@ -208,6 +208,7 @@ RegisterNetEvent('qb-bossmenu:server:FireEmployee', function(target)
 			Employee.job = json.decode(Employee.job)
 			if Employee.job.grade.level > Player.PlayerData.job.grade.level then TriggerClientEvent('QBCore:Notify', src, "You cannot fire this citizen!", "error") return end
 			local job = {}
+			local charinfo = json.decode(Employee.charinfo)
 			job.name = "unemployed"
 			job.label = "Unemployed"
 			job.payment = QBCore.Shared.Jobs[job.name].grades['0'].payment or 500
@@ -218,7 +219,7 @@ RegisterNetEvent('qb-bossmenu:server:FireEmployee', function(target)
 			job.grade.level = 0
 			MySQL.update('UPDATE players SET job = ? WHERE citizenid = ?', { json.encode(job), target })
 			TriggerClientEvent('QBCore:Notify', src, "Employee fired!", "success")
-			TriggerEvent("qb-log:server:CreateLog", "bossmenu", "Job Fire", "red", Player.PlayerData.charinfo.firstname .. " " .. Player.PlayerData.charinfo.lastname .. ' successfully fired ' .. Employee.PlayerData.charinfo.firstname .. " " .. Employee.PlayerData.charinfo.lastname .. " (" .. Player.PlayerData.job.name .. ")", false)
+			TriggerEvent("qb-log:server:CreateLog", "bossmenu", "Job Fire", "red", Player.PlayerData.charinfo.firstname .. " " .. Player.PlayerData.charinfo.lastname .. ' successfully fired ' .. charinfo.firstname .. " " .. charinfo.lastname .. " (" .. Player.PlayerData.job.name .. ")", false)
 		else
 			TriggerClientEvent('QBCore:Notify', src, "Civilian not in city.", "error")
 		end
