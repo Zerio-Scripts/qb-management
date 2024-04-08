@@ -113,6 +113,16 @@ QBCore.Functions.CreateCallback('qb-bossmenu:server:GetAccount', function(_, cb,
 	cb(result)
 end)
 
+function getAllCitizenIds()
+	local citizenIds = {}
+	local result = MySQL.Sync.fetchAll("SELECT citizenid FROM players")
+	for _, data in ipairs(result) do
+		table.insert(citizenIds, data.citizenid)
+	end
+	return citizenIds
+end
+
+
 -- Get Employees
 QBCore.Functions.CreateCallback('qb-bossmenu:server:GetEmployees', function(source, cb, jobname)
 	local src = source
