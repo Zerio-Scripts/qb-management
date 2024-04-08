@@ -117,36 +117,49 @@ end)
 QBCore.Functions.CreateCallback('qb-bossmenu:server:GetEmployees', function(source, cb, jobname)
 	local src = source
 	local Player = QBCore.Functions.GetPlayer(src)
+	
 
-	if not Player.PlayerData.job.isboss then ExploitBan(src, 'GetEmployees Exploiting') return end
+	if not Player.PlayerData.job.isboss then
+		ExploitBan(src, 'GetEmployees Exploiting')
+		return
+	end
 
+	local allCitizenIds = getAllCitizenIds()
 	local employees = {}
 
-	local players = MySQL.query.await("SELECT * FROM `players` WHERE `job` LIKE '%".. jobname .."%'", {})
-	
-	if players[1] ~= nil then
-		for _, value in pairs(players) do
-			local isOnline = QBCore.Functions.GetPlayerByCitizenId(value.citizenid)
-
-			if isOnline and isOnline.PlayerData.job.name == jobname then
-				employees[#employees+1] = {
-				empSource = isOnline.PlayerData.citizenid,
-				grade = isOnline.PlayerData.job.grade,
-				isboss = isOnline.PlayerData.job.isboss,
-				name = '🟢 ' .. isOnline.PlayerData.charinfo.firstname .. ' ' .. isOnline.PlayerData.charinfo.lastname
-				}
-			elseif value.job.name == jobname then
-				employees[#employees+1] = {
-				empSource = value.citizenid,
-				grade =  value.job.grade,
-				isboss = value.job.isboss,
-				name = '❌ ' ..  value.charinfo.firstname .. ' ' .. value.charinfo.lastname
-				}
-			end
+	for _, ctid in ipairs(allCitizenIds) do
+		local isOnline = QBCore.Functions.GetPlayerByCitizenId(ctid)
+		if isOnline then 
+			exports["zerio-multijobs"]:GetJobs(isOnline.PlayerData.citizenid,function(jobs)
+				for k,v in pairs(jobs) do
+					if v.name == jobname then
+						employees[#employees + 1] = {
+							empSource = isOnline.PlayerData.citizenid,
+							grade = v.rank,
+							isboss = isOnline.PlayerData.job.isboss,
+							name = '🟢 ' .. isOnline.PlayerData.charinfo.firstname .. ' ' .. isOnline.PlayerData.charinfo.lastname
+						}
+					end
+				end
+			end)
+		else
+			local isOffline = QBCore.Functions.GetOfflinePlayerByCitizenId(ctid)
+			exports["zerio-multijobs"]:GetJobs(isOffline.PlayerData.citizenid,function(jobs)
+				for k,v in pairs(jobs) do
+					if v.name == jobname then
+						employees[#employees + 1] = {
+							empSource = isOffline.PlayerData.citizenid,
+							grade = v.rank,
+							isboss = isOffline.PlayerData.job.isboss,
+							name = '❌ ' .. isOffline.PlayerData.charinfo.firstname .. ' ' .. isOffline.PlayerData.charinfo.lastname
+						}
+					end
+				end
+			end)
 		end
 		table.sort(employees, function(a, b)
-            return a.grade.level > b.grade.level
-        end)
+			return a.grade > b.grade
+		end)
 	end
 	cb(employees)
 end)

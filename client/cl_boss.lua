@@ -116,6 +116,17 @@ RegisterNetEvent('qb-bossmenu:client:OpenMenu', function()
     exports['qb-menu']:openMenu(bossMenu)
 end)
 
+function getGradeLevelName(jobname, gradeNumber)
+    local jobGrades = QBCore.Shared.Jobs[jobname].grades
+    local gradeString = tostring(gradeNumber) -- Convert grade number to string
+    for key, gradeTable in pairs(jobGrades) do
+        if key == gradeString then
+            return gradeTable.name
+        end
+    end
+    return "Unknown Grade"
+end
+
 RegisterNetEvent('qb-bossmenu:client:employeelist', function()
     local EmployeesMenu = {
         {
@@ -128,7 +139,7 @@ RegisterNetEvent('qb-bossmenu:client:employeelist', function()
         for _, v in pairs(cb) do
             EmployeesMenu[#EmployeesMenu + 1] = {
                 header = v.name,
-                txt = v.grade.name,
+                txt = getGradeLevelName(PlayerJob.name, v.grade),
                 icon = "fa-solid fa-circle-user",
                 params = {
                     event = "qb-bossmenu:client:ManageEmployee",
