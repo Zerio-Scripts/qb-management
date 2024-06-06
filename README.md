@@ -1,8 +1,14 @@
 # qb-management
+<<<<<<< HEAD
 
 THIS IS THE SAME AS QB-MANAGEMENT JUST THAT IT HAS ZERIO-MULTIJOBS SUPPORT! :)
 
 New qb-bossmenu / qb-gangmenu converted into one resource using qb-menu and qb-input, with SQL support for society funds!
+=======
+- Manage employees online or offline!
+- Access a personal boss level stash!
+- Allows for multiple boss menu locations!
+>>>>>>> ada03aa525dbcd97208ae6907c089dfcce3160d3
 
 ## Dependencies
 - [qb-core](https://github.com/qbcore-framework/qb-core)
@@ -11,22 +17,6 @@ New qb-bossmenu / qb-gangmenu converted into one resource using qb-menu and qb-i
 - [qb-menu](https://github.com/qbcore-framework/qb-menu)
 - [qb-inventory](https://github.com/qbcore-framework/qb-inventory)
 - [qb-clothing](https://github.com/qbcore-framework/qb-clothing)
-
-## Screenshots
-![image](https://i.imgur.com/9yiQZDX.png)
-![image](https://i.imgur.com/MRMWeqX.png)
-
-## Installation
-### Manual
-- Download the script and put it in the `[qb]` directory.
-- IF NEW SERVER: Import `qb-management.sql` in your database
-- IF EXISTING SERVER: Import `qb-management_upgrade.sql` in your database
-- Edit config.lua with coords
-- Restart Script / Server
-
-## ATTENTION
-### YOU NEED TO CREATE A ROW IN DATABASE WITH NAME OF SOCIETY IN MANAGEMENT_FUNDS TABLE IF YOU HAVE CUSTOM JOBS / GANGS
-![database](https://i.imgur.com/6cd3NLU.png)
 
 # License
 
