@@ -129,7 +129,6 @@ RegisterNetEvent('qb-bossmenu:server:FireEmployee', function(target)
 			if Employee.PlayerData.source then -- Player is online
 				TriggerClientEvent('QBCore:Notify', Employee.PlayerData.source, 'You have been fired! Good luck.', 'error')
 			end
-			Employee.Functions.Save()
 		else
 			TriggerClientEvent('QBCore:Notify', src, 'Error..', 'error')
 		end

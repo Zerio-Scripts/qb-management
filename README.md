@@ -1,16 +1,13 @@
 # qb-management
-<<<<<<< HEAD
 
 THIS IS THE SAME AS QB-MANAGEMENT JUST THAT IT HAS ZERIO-MULTIJOBS SUPPORT! :)
 
-New qb-bossmenu / qb-gangmenu converted into one resource using qb-menu and qb-input, with SQL support for society funds!
-=======
 - Manage employees online or offline!
 - Access a personal boss level stash!
 - Allows for multiple boss menu locations!
->>>>>>> ada03aa525dbcd97208ae6907c089dfcce3160d3
 
 ## Dependencies
+
 - [qb-core](https://github.com/qbcore-framework/qb-core)
 - [qb-smallresources](https://github.com/qbcore-framework/qb-smallresources) (For the Logs)
 - [qb-input](https://github.com/qbcore-framework/qb-input)
@@ -18,7 +15,7 @@ New qb-bossmenu / qb-gangmenu converted into one resource using qb-menu and qb-i
 - [qb-inventory](https://github.com/qbcore-framework/qb-inventory)
 - [qb-clothing](https://github.com/qbcore-framework/qb-clothing)
 
-# License
+## License
 
     QBCore Framework
     Copyright (C) 2021 Joshua Eger
