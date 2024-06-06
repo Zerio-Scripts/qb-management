@@ -25,27 +25,30 @@ QBCore.Functions.CreateCallback('qb-bossmenu:server:GetEmployees', function(sour
 	end
 
 	local employees = {}
+	local players = exports["zerio-multijobs"]:GetPlayersWithJob(jobname)
 
-	local players = MySQL.query.await("SELECT * FROM `players` WHERE `job` LIKE '%" .. jobname .. "%'", {})
+	for _, value in pairs(players) do
+		local Target = QBCore.Functions.GetOfflinePlayerByCitizenId(value.identifier)
 
-	if players[1] ~= nil then
-		for _, value in pairs(players) do
-			local Target = QBCore.Functions.GetPlayerByCitizenId(value.citizenid) or QBCore.Functions.GetOfflinePlayerByCitizenId(value.citizenid)
+		if Target then
+			local isOnline = Target.PlayerData.source
+			local gradeLabel = "Unknown"
 
-			if Target and Target.PlayerData.job.name == jobname then
-				local isOnline = Target.PlayerData.source
-				employees[#employees + 1] = {
-					empSource = Target.PlayerData.citizenid,
-					grade = Target.PlayerData.job.grade,
-					isboss = Target.PlayerData.job.isboss,
-					name = (isOnline and '🟢 ' or '❌ ') .. Target.PlayerData.charinfo.firstname .. ' ' .. Target.PlayerData.charinfo.lastname
-				}
+			if QBCore.Shared.Jobs[jobname] and QBCore.Shared.Jobs[jobname].grades[tostring(value.grade)] then
+				gradeLabel = QBCore.Shared.Jobs[jobname].grades[tostring(value.grade)]
 			end
+
+			employees[#employees + 1] = {
+				empSource = Target.PlayerData.citizenid,
+				grade = gradeLabel,
+				isboss = Target.PlayerData.job.isboss,
+				name = (isOnline and '🟢 ' or '❌ ') .. Target.PlayerData.charinfo.firstname .. ' ' .. Target.PlayerData.charinfo.lastname
+			}
 		end
-		table.sort(employees, function(a, b)
-			return a.grade.level > b.grade.level
-		end)
 	end
+	table.sort(employees, function(a, b)
+		return a.grade.level > b.grade.level
+	end)
 	cb(employees)
 end)
 
@@ -89,6 +92,12 @@ RegisterNetEvent('qb-bossmenu:server:GradeUpdate', function(data)
 
 	if Employee then
 		if Employee.Functions.SetJob(Player.PlayerData.job.name, data.grade) then
+			if exports["zerio-multijobs"]:DoesPlayerHaveJob(Employee.PlayerData.citizenid, Player.PlayerData.job.name) then
+				exports["zerio-multijobs"]:UpdateJobRank(Employee.PlayerData.citizenid, Player.PlayerData.job.name, data.grade)	
+			else	
+				exports["zerio-multijobs"]:AddJob(Employee.PlayerData.citizenid, Player.PlayerData.job.name, data.grade)
+			end
+
 			TriggerClientEvent('QBCore:Notify', src, 'Sucessfully promoted!', 'success')
 			Employee.Functions.Save()
 
@@ -122,6 +131,7 @@ RegisterNetEvent('qb-bossmenu:server:FireEmployee', function(target)
 			return
 		end
 		if Employee.Functions.SetJob('unemployed', '0') then
+			exports["zerio-multijobs"]:RemoveJob(target, Player.PlayerData.job.name)
 			Employee.Functions.Save()
 			TriggerClientEvent('QBCore:Notify', src, 'Employee fired!', 'success')
 			TriggerEvent('qb-log:server:CreateLog', 'bossmenu', 'Job Fire', 'red', Player.PlayerData.charinfo.firstname .. ' ' .. Player.PlayerData.charinfo.lastname .. ' successfully fired ' .. Employee.PlayerData.charinfo.firstname .. ' ' .. Employee.PlayerData.charinfo.lastname .. ' (' .. Player.PlayerData.job.name .. ')', false)
@@ -148,6 +158,7 @@ RegisterNetEvent('qb-bossmenu:server:HireEmployee', function(recruit)
 	end
 
 	if Target and Target.Functions.SetJob(Player.PlayerData.job.name, 0) then
+		exports["zerio-multijobs"]:AddJob(Target.PlayerData.citizenid, Player.PlayerData.job.name, 0)
 		TriggerClientEvent('QBCore:Notify', src, 'You hired ' .. (Target.PlayerData.charinfo.firstname .. ' ' .. Target.PlayerData.charinfo.lastname) .. ' come ' .. Player.PlayerData.job.label .. '', 'success')
 		TriggerClientEvent('QBCore:Notify', Target.PlayerData.source, 'You were hired as ' .. Player.PlayerData.job.label .. '', 'success')
 		TriggerEvent('qb-log:server:CreateLog', 'bossmenu', 'Recruit', 'lightgreen', (Player.PlayerData.charinfo.firstname .. ' ' .. Player.PlayerData.charinfo.lastname) .. ' successfully recruited ' .. (Target.PlayerData.charinfo.firstname .. ' ' .. Target.PlayerData.charinfo.lastname) .. ' (' .. Player.PlayerData.job.name .. ')', false)
