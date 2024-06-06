@@ -93,8 +93,8 @@ RegisterNetEvent('qb-bossmenu:server:GradeUpdate', function(data)
 	if Employee then
 		if Employee.Functions.SetJob(Player.PlayerData.job.name, data.grade) then
 			if exports["zerio-multijobs"]:DoesPlayerHaveJob(Employee.PlayerData.citizenid, Player.PlayerData.job.name) then
-				exports["zerio-multijobs"]:UpdateJobRank(Employee.PlayerData.citizenid, Player.PlayerData.job.name, data.grade)	
-			else	
+				exports["zerio-multijobs"]:UpdateJobRank(Employee.PlayerData.citizenid, Player.PlayerData.job.name, data.grade)
+			else
 				exports["zerio-multijobs"]:AddJob(Employee.PlayerData.citizenid, Player.PlayerData.job.name, data.grade)
 			end
 
