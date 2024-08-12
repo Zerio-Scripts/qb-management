@@ -32,18 +32,22 @@ QBCore.Functions.CreateCallback('qb-bossmenu:server:GetEmployees', function(sour
 
 		if Target then
 			local isOnline = Target.PlayerData.source
-			local gradeLabel = "Unknown"
+			local gradeData = nil
 
 			if QBCore.Shared.Jobs[jobname] and QBCore.Shared.Jobs[jobname].grades[tostring(value.grade)] then
-				gradeLabel = QBCore.Shared.Jobs[jobname].grades[tostring(value.grade)]
+				gradeData = QBCore.Shared.Jobs[jobname].grades[tostring(value.grade)]
 			end
 
-			employees[#employees + 1] = {
-				empSource = Target.PlayerData.citizenid,
-				grade = gradeLabel,
-				isboss = Target.PlayerData.job.isboss,
-				name = (isOnline and '🟢 ' or '❌ ') .. Target.PlayerData.charinfo.firstname .. ' ' .. Target.PlayerData.charinfo.lastname
-			}
+			if gradeData then
+				employees[#employees + 1] = {
+					empSource = Target.PlayerData.citizenid,
+					grade = gradeData,
+					isboss = Target.PlayerData.job.isboss,
+					name = (isOnline and '🟢 ' or '❌ ') .. Target.PlayerData.charinfo.firstname .. ' ' .. Target.PlayerData.charinfo.lastname
+				}
+			else
+				warn("Player", value.identifier, "has an invalid job", jobname, value.grade)
+			end
 		end
 	end
 	table.sort(employees, function(a, b)
