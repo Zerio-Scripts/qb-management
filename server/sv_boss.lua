@@ -39,6 +39,7 @@ QBCore.Functions.CreateCallback('qb-bossmenu:server:GetEmployees', function(sour
 			end
 
 			if gradeData then
+				gradeData.level = value.grade
 				employees[#employees + 1] = {
 					empSource = Target.PlayerData.citizenid,
 					grade = gradeData,
