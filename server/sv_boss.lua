@@ -28,7 +28,11 @@ QBCore.Functions.CreateCallback('qb-bossmenu:server:GetEmployees', function(sour
 	local players = exports["zerio-multijobs"]:GetPlayersWithJob(jobname)
 
 	for _, value in pairs(players) do
-		local Target = QBCore.Functions.GetOfflinePlayerByCitizenId(value.identifier)
+		local Target = QBCore.Functions.GetPlayerByCitizenId(value.identifier)
+
+		if not Target then
+			Target = QBCore.Functions.GetOfflinePlayerByCitizenId(value.identifier)
+		end
 
 		if Target then
 			local isOnline = Target.PlayerData.source
