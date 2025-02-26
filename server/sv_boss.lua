@@ -140,7 +140,7 @@ RegisterNetEvent('qb-bossmenu:server:FireEmployee', function(target)
 			return
 		end
 		if Employee.Functions.SetJob('unemployed', '0') then
-			exports["zerio-multijobs"]:RemoveJob(target, Player.PlayerData.job.name)
+			exports["zerio-multijobs"]:RemoveJob(Employee.PlayerData.citizenid, Player.PlayerData.job.name)
 			Employee.Functions.Save()
 			TriggerClientEvent('QBCore:Notify', src, 'Employee fired!', 'success')
 			TriggerEvent('qb-log:server:CreateLog', 'bossmenu', 'Job Fire', 'red', Player.PlayerData.charinfo.firstname .. ' ' .. Player.PlayerData.charinfo.lastname .. ' successfully fired ' .. Employee.PlayerData.charinfo.firstname .. ' ' .. Employee.PlayerData.charinfo.lastname .. ' (' .. Player.PlayerData.job.name .. ')', false)
