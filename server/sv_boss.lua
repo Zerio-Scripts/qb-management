@@ -139,8 +139,9 @@ RegisterNetEvent('qb-bossmenu:server:FireEmployee', function(target)
 			TriggerClientEvent('QBCore:Notify', src, 'You cannot fire this citizen!', 'error')
 			return
 		end
+		local jobName = Player.PlayerData.job.name -- cache, incase of firing themself
 		if Employee.Functions.SetJob('unemployed', '0') then
-			exports["zerio-multijobs"]:RemoveJob(Employee.PlayerData.citizenid, Player.PlayerData.job.name)
+			exports["zerio-multijobs"]:RemoveJob(Employee.PlayerData.citizenid, jobName)
 			Employee.Functions.Save()
 			TriggerClientEvent('QBCore:Notify', src, 'Employee fired!', 'success')
 			TriggerEvent('qb-log:server:CreateLog', 'bossmenu', 'Job Fire', 'red', Player.PlayerData.charinfo.firstname .. ' ' .. Player.PlayerData.charinfo.lastname .. ' successfully fired ' .. Employee.PlayerData.charinfo.firstname .. ' ' .. Employee.PlayerData.charinfo.lastname .. ' (' .. Player.PlayerData.job.name .. ')', false)
