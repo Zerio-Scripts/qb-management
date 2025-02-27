@@ -35,7 +35,7 @@ QBCore.Functions.CreateCallback('qb-bossmenu:server:GetEmployees', function(sour
 		end
 
 		if Target then
-			local isOnline = Target.PlayerData.source
+			local isOnline = type(Target.PlayerData.source) == "number"
 			local gradeData = nil
 
 			if QBCore.Shared.Jobs[jobname] and QBCore.Shared.Jobs[jobname].grades[tostring(value.grade)] then
